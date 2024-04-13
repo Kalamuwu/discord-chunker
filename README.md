@@ -23,20 +23,16 @@ Decoding chunks back to the original file(s):
 
 # How?
 
-tl;dr it glues the files end-to-end, and cuts them every 25mb:
-
+First, the files are specified to the program. An example is shown with the files below.
 ```
-_A_____________B_____C_________D________E____F__
+_A__B_____________C_____D_________E________F____
 |  |             |     |         |        |    |
 |  |             |     |         |        |    |
 |  |             |     |         |        |    |
 |  |             |     |         |        |    |
 |__|_____________|_____|_________|________|____|
 ```
-```
-|
-v
-```
+These files are then glued end-to-end, with a `header` file keeping track of the original file lengths:
 ```
 _0__________1__________2__________3__________4__
 |          |          |          |          |  |
@@ -45,5 +41,15 @@ _0__________1__________2__________3__________4__
 |  |       |     |    ||         |        | |  |
 |__________|__________|__________|__________|__|
 ```
+These chunks are all 25mb in length (or, if specified, some other predetermined length) for uploading to Discord.
 
-then, on the other side, glues them all back together, and cuts appropriately, based on the generated `header` file.
+Then, on the other side, download all the files. The program will then glue them all back together, and cut appropriately, based on the generated `header` file:
+```
+_A__B_____________C_____D_________E________F____
+|  |             |     |         |        |    |
+|  |             |     |         |        |    |
+|  |             |     |         |        |    |
+|  |             |     |         |        |    |
+|__|_____________|_____|_________|________|____|
+```
+Voilà.
