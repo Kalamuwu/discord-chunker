@@ -1,25 +1,70 @@
 # discord-chunker
 
-Got a large file you wanna share, but don't have Discord Nitro?
-discord-chunker is a simple python script that splits uploads into 25mb chunks, and then reassembles them on the other side.
+Got a large file you wanna share, but don't have Discord Nitro? discord-chunker is a simple python script that splits uploads into 25mb chunks, and then reassembles them on the other side.
+
+
+---
+
 
 # Usage
 
-### Encoding
+## Installation
 
-Encoding a file to chunks:
-`python3 chunker.py encode <infile> <outdir>`
+1. Install python 3, if not already installed
+2. Place this script somewhere, like `~/.local/bin` on Linux or `C:\Users\...\Documents` on Windows
+3. Done!
 
-This will instruct the script to take file `infile` (or all files in folder, if `infile` is a directory) and encode it, spitting out the header and associated chunks in directory `outdir`.
 
-### Decoding
+## File Standard
 
-Decoding chunks back to the original file(s):
-`python3 chunker.py decode <indir> [-o outdir]`
+This program operates with the following files:
 
-1. Download all the chunks from a discord channel or otherwise, as well as the `header` file, and place them all in a new, empty directory. Do not rename any of the chunks.
-2. Navigate up one level, and run the `decode` command, with `indir` as the folder you just made.
-3. Optionally, specify an output directory with `-o`. By default, the output(s) will be placed in the cwd.
+> `header`: Defines the name, size, length, and byte index of the decoded files
+> 
+> `chunk-NN`: The packaged data itself
+
+For encoding, these files will be generated. For decoding, place these files in a new empty folder, and call `decode` mode on that folder.
+
+
+## Chunking
+
+Call the script in `encode` mode:
+
+```bash
+python3 chunker.py encode <input_file_or_dir> <output_dir>
+```
+
+This will chunk together the given `input_file`, or, if given a directory, all the files within `input_dir`. The output files will be placed in `output_dir`.
+
+
+## Uploading/Downloading
+
+On the discord side of things, upload all the chunk files that were produced, as well as the header file.
+
+To reproduce the files, download all the chunk files and the header file and place those into a new, empty folder.
+
+
+## De-chunking
+
+Call the script in `decode` mode:
+
+```bash
+python3 chunker.py decode <chunk_dir>
+```
+
+This will de-chunk the chunk and header files found in `chunk_dir`.
+
+To specify the output folder of the new files, use the `-o` flag:
+
+```bash
+python3 chunker.py decode <chunk_dir> -o <output_dir>
+```
+
+This will place the decoded files in `output_dir`, instead of the current working directory.
+
+
+---
+
 
 # How?
 
